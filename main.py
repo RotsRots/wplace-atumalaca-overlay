@@ -73,14 +73,20 @@ class CORSHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
 
 
-httpd = socketserver.TCPServer(('', PORT), CORSHandler)
-httpd.socket = ssl.wrap_socket(httpd.socket,
-                                keyfile=KEY_FILE,
-                                certfile=CERT_FILE,
-                                server_side=True)
+if __name__ == '__main__':
+    updateImage()  # Executa uma vez no início
 
-print(f"Serving HTTPS on port {PORT}...")
-while True:
-    updateImage()
-    httpd.timeout = 60
-    httpd.handle_request()
+    httpd = socketserver.TCPServer(('', PORT), CORSHandler)
+    httpd.socket = ssl.wrap_socket(httpd.socket,
+                                    keyfile=KEY_FILE,
+                                    certfile=CERT_FILE,
+                                    server_side=True)
+
+    print(f"Serving HTTPS on port {PORT}...")
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("Shutting down...")
+        httpd.shutdown()
+
+
