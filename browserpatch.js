@@ -1,5 +1,5 @@
 (async () => {
-	let tilesconfig = await (await fetch("http://localhost:8000/config.json", {cache: 'no-cache'})).json();
+	let tilesconfig = await (await fetch("https://rotstudio.com.br:8000/config.json", {cache: 'no-cache'})).json();
 
 	fetch = new Proxy(fetch, {
 		apply: (target, thisArg, argList) => {
@@ -26,8 +26,8 @@
 				}
 
 				if (url.hostname === "backend.wplace.live" && match) {
-					url.host = "localhost:8000";
-					url.protocol = "http";
+					url.host = "rotstudio.com.br:8000";
+					url.protocol = "https";
 					console.log("Modified URL:", url);
 
 					if (typeof argList[0] === "object") {
